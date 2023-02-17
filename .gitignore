@@ -1,0 +1,11 @@
+package-lock.json
+node_modules
+.env
+.env.prod
+TEST_FILE.md
+yarn.lock
+yarn-error.log
+.vscode/
+log/
+*.DS_Store*
+google-cloud-key.json

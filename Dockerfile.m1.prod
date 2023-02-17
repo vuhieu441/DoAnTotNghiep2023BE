@@ -1,0 +1,10 @@
+FROM --platform=linux/amd64 node:14-alpine
+ENV CHROME_BIN="/usr/bin/chromium-browser"\
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true"
+WORKDIR '/app'
+COPY ./package.json ./
+RUN apk add --update --no-cache curl jq py3-configobj py3-pip py3-setuptools python3 python3-dev make g++ && rm -rf /var/cache/apk/*
+RUN npm install
+COPY . .
+RUN ls
+CMD ["npm", "run", "start-manual"]

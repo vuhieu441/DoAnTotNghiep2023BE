@@ -1,0 +1,32 @@
+language: generic
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - PROJECT_ID_=neat-pagoda-334509
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+  - openssl aes-256-cbc -K $encrypted_1f111a4dfa61_key -iv $encrypted_1f111a4dfa61_iv -in inbound-augury-324120-7c4eb2bd55ea.json.enc -out inbound-augury-324120-7c4eb2bd55ea.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file ${$PROJECT_ID_}-7c4eb2bd55ea.json
+  - gcloud config set project $PROJECT_ID_
+  - gcloud config set compute/zone us-central1-c
+  - gcloud container clusters get-credentials udic-edu-cluster
+  - gcloud auth configure-docker
+
+script:
+  - echo "Skipping tests"
+
+deploy:
+  provider: script
+  script: bash ./deploy_prod.sh
+  on:
+    branch: production
+
+branches:
+  only:
+    - production

@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: udic-edu-server-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: udic-edu-server
+  template:
+    metadata:
+      labels:
+        component: udic-edu-server
+    spec:
+      containers:
+        - name: udic-edu-server
+          image: gcr.io/neat-pagoda-334509/udic-edu-server
+          ports:
+            - containerPort: 5000
+            - containerPort: 5001
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "62m"
+            limits:
+              memory: "512Mi"
+              cpu: "93m"
+          env:
+            - name: NODE_ENV
+              value: http
+            - name: SERVER_PORT_PROD
+              value: "5000"
+            - name: WSS_PORT
+              value: "5001"
+            - name: DB_URL
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-url
+                  key: DB_URL
+            - name: SESSION_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: session-secret
+                  key: SESSION_SECRET_KEY
+            - name: SYSTEM_URL
+              value: 'greenifyvn@gmail.com'
+            - name: GCS_BUCKET_NAME
+              value: "udic_dev"
+            - name: GCP_SECRET_KEY_FILE
+              valueFrom:
+                secretKeyRef:
+                  name: gcp-secret
+                  key: GCP_SECRET_KEY_FILE
+            - name: GCP_STORAGE_URL
+              value: "https://storage.googleapis.com"
+            - name: WINSTON_LOGGER_LOG_LEVEL
+              value: "debug"
+            - name: CALENDAR_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: calendar-client-id
+                  key: CALENDAR_CLIENT_ID
+            - name: CALENDAR_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: calendar-client-secret
+                  key: CALENDAR_CLIENT_SECRET
+            - name: CALENDAR_REDIRECT_URL
+              value: "https://vietlesson4u.com/api/google-meet/callback"
+            - name: PAYPAL_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: paypal-client-id
+                  key: PAYPAL_CLIENT_ID
+            - name: PAYPAL_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: paypal-client-secret
+                  key: PAYPAL_CLIENT_SECRET
+            - name: PAYPAL_CLIENT_MODE
+              value: "sandbox"
+            - name: FRONT_END_URL
+              value: "https://vietlesson4u.com"
+            - name: API_END_URL
+              value: "https://vietlesson4u.com/api"
+            - name: SENDGRID_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sendgrid-api-key
+                  key: SENDGRID_API_KEY
+            - name: MOMO_PARTNER_CODE
+              valueFrom:
+                secretKeyRef:
+                  name: momo-partner-code
+                  key: MOMO_PARTNER_CODE
+            - name: MOMO_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: momo-access-key
+                  key: MOMO_ACCESS_KEY
+            - name: MOMO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: momo-secret-key
+                  key: MOMO_SECRET_KEY
